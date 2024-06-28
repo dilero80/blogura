@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.message.Message;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,8 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 public class Topic {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private BigInteger id;
 
     private String title;
     private String message;
@@ -37,7 +38,7 @@ public class Topic {
     private Course course;
 
     @OneToMany (fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer")
+    @JoinColumn(name = "id")
     private List<Answer> answers;
 
 

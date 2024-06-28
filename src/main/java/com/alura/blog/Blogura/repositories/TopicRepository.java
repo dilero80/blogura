@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigInteger;
+
 
 @Repository
-public interface TopicRepository extends JpaRepository<Topic, String>{
+public interface TopicRepository extends JpaRepository<Topic, BigInteger>{
 
 }

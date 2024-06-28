@@ -7,15 +7,18 @@ import com.alura.blog.Blogura.entities.dto.TopicDTO;
 import com.alura.blog.Blogura.entities.dto.TopicResponseDTO;
 import com.alura.blog.Blogura.enumerators.UserProfiles;
 import com.alura.blog.Blogura.repositories.TopicRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
@@ -29,7 +32,6 @@ public class TopicService {
 
 
     public TopicResponseDTO createTopic(TopicDTO topicDTO){
-        System.out.println(topicDTO);
         Topic topic = topicRepository.save(new Topic(
                 topicDTO.title(),
                 topicDTO.message(),
@@ -39,6 +41,7 @@ public class TopicService {
                         "dilero@gmail.com","1234",
                         UserProfiles.ADMIN),
                 new Course("1","PRUEBA"))
+
         );
         return new TopicResponseDTO(topic);
     }
@@ -49,8 +52,32 @@ public class TopicService {
     }
 
 
-    public TopicResponseDTO getTopicbyId(String id) {
+    public TopicResponseDTO getTopicbyId(BigInteger id) {
         Optional<Topic> topic = topicRepository.findById(id);
+
         return new TopicResponseDTO(topic.get());
+    }
+
+    public TopicResponseDTO deleteTopic(BigInteger id) {
+        TopicResponseDTO topic = this.getTopicbyId(id);
+        topicRepository.deleteById(id);
+        return topic;
+    }
+
+    public TopicResponseDTO updateTopic(BigInteger id, @Valid TopicDTO topicDTO) {
+        Optional<Topic> topic = topicRepository.findById(id);
+        if (topic.isPresent()){
+            topic.get().setTitle(topicDTO.title());
+            topic.get().setMessage(topicDTO.message());
+            if (topic.get().getAnswers() == null){
+                topic.get().setAnswers(new ArrayList<>());
+            }
+            topicRepository.save(topic.get());
+            return new TopicResponseDTO(topic.get());
+        }
+        else{
+            throw new NoSuchElementException();
+        }
+
     }
 }

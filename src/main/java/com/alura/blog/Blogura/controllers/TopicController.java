@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import org.springframework.data.domain.Pageable;
+
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 
@@ -41,7 +43,7 @@ public class TopicController {
             summary = "Get a topic by ID",
             description = "Get Topic By ID",
             tags = { "consult", "post" })
-    public ResponseEntity<TopicResponseDTO> getTopicsbyId(@PathVariable String id){
+    public ResponseEntity<TopicResponseDTO> getTopicsById(@PathVariable BigInteger id){
         TopicResponseDTO topic = topicService.getTopicbyId(id);
 
         return ResponseEntity.ok(topic);
@@ -60,5 +62,28 @@ public class TopicController {
         return ResponseEntity.created(url).body(response);
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    @Operation(
+            summary = "delete topic in database",
+            description = "Delete by ID",
+            tags = { "delete" })
+    public ResponseEntity<TopicResponseDTO> deleteTopic(@PathVariable BigInteger id)  {
+        TopicResponseDTO response = topicService.deleteTopic(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping ("/{id}")
+    @Transactional
+    @Operation(
+            summary = "Modify topic in database",
+            description = "Modify topic by ID",
+            tags = { "modify" })
+    public ResponseEntity<TopicResponseDTO> modifyTopic(@PathVariable BigInteger id, @RequestBody @Valid TopicDTO topicDTO,
+                                                        UriComponentsBuilder uriComponentsBuilder)  {
+        TopicResponseDTO response = topicService.updateTopic(id, topicDTO);
+        URI url = uriComponentsBuilder.path("topics/{id}").buildAndExpand(response.id()).toUri();
+        return ResponseEntity.created(url).body(response);
+    }
 
 }

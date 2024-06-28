@@ -1,6 +1,6 @@
 CREATE TABLE answers(
 
-    id VARCHAR(100) NOT NULL UNIQUE,
+    id INT NOT NULL AUTO_INCREMENT,
     message TEXT NOT NULL,
     topic VARCHAR(100) NOT NULL,
     creationDate DATETIME NOT NULL,
