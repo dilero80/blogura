@@ -7,7 +7,7 @@ CREATE TABLE topics(
     status BOOLEAN,
     author VARCHAR(100) NOT NULL,
     course VARCHAR(100) NOT NULL,
-    answers VARCHAR(100) NOT NULL,
+    answers VARCHAR(100) ,
 
     primary key(id)
 
